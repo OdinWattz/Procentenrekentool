@@ -29,12 +29,32 @@ Door deze tool te ontwikkelen wordt hopelijk het begrip van procenten vegroot en
 #### Technisch ontwerp
 
 1. onze app moet steeds checken of 2 van de 3 variabelen een waarde hebben gekregen: dus onder elk input-veld moet een onchange-listener komen die checkt of er 2 van de 3 waarden ingevuld zijn: deze functie heet `checkSolveButton()` 
-    - `checkSolveButton()` moet na het invullen (`onchange`) bij 3 unput velden checken of er wat staat; daarom:
-    1. `const oud = document.getElementById("oud").value`
-    2. `const nieuw = document.getElementById("nieuw").value`
-    3. `const percentage = document.getElementById("percentage").value`
-    - in combinatie met
-    4. `const soort = document.getElementById("soort").value`
-    - als er 2 van de 3 ingevuld zijn, dan: `if(oud.value != '' && percentage.value != '' && soort.value != '') {reken nieuw uit}``elseif(nieuw.value != '' && percentage.value != '' && soort.value != '')`
-2. als er 2 van de 3 gevuld zijn, moet het attribuut `disabled` van de los op -knop verwijderd worden zodat de knop actief wordt
+    - `checkSolveButton()` moet na het invullen (`onchange`) bij 3 unput velden checken of er wat staat; daarom:  
+    `const oud = document.getElementById("oud")`  
+    `const nieuw = document.getElementById("nieuw")`  
+    `const percentage = document.getElementById("percentage")`
+    - in combinatie met  
+    `const soort = document.getElementById("soort")`
+    - de combinatie van gekozen soort.value en percentage.value leidt tot de factor:  
+        - als `soort.value == 1`dan geldt:  
+        `factor = percentage.value / 100`
+        - als `soort.value == 2` dan geld:  
+        `factor = 1 + percentage.value / 100`  
+        - als `soort.value == 3` dan geldt:  
+        `factor = 1 - percentage.value / 100`
+    - als er 2 van de 3 ingevuld zijn, dan:  
+      
+    `if(oud.value != '' && percentage.value != '' && soort.value != '')`  
+     `{ nieuw.value = oud.value * factor }`  
+    `elseif(nieuw.value != '' && percentage.value != '' && soort.value != '')`  
+    `{oud.value = nieuw.value / factor }`  
+    `elseif(oud.value != '' && nieuw.value != '')`  
+    `{ factor = nieuw.value / oud.value }`  
+    -   `if(factor > 1) { soort.value = 2 }`  
+            `{ percentage.value = (factor - 1) * 100 }`  
+        `else { soort.value = 3 }`  
+            `{ percentage.value = (1 - factor) * 100 }`  
+    `else`  
+    {doe niks}
+2. als er 2 van de 3 gevuld zijn, moet het attribuut `disabled` van de los op -knop verwijderd worden zodat de knop actief wordt. Vergelijkbaar moet de `class = 'is-invalid'` van een inputveld dat gevuld is, veranderen in `class='is-valid'`
 3. als de gebruiker vervolgens op de Los op -knop klikt, moet de waarde van de overgebleven variable gevuld worden met het juiste antwoord
